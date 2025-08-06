@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>भावाअशिप - ICFRE Admit Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .full-page-iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">
+            भावाअशिप - वन आनुवंशिकी एवं वृक्ष प्रजनन संस्थान, कोयम्बटूर<br>
+            ICFRE - Institute of Forest Genetics and Tree Breeding, Coimbatore
+        </h1>
+        <div id="formContainer">
+            <div class="mb-4">
+                <label for="rollNo" class="block text-sm font-medium text-gray-700">Roll Number</label>
+                <input type="text" id="rollNo" class="mt-1 p-2 w-full border rounded-md" placeholder="Enter Roll Number">
+            </div>
+            <div class="mb-4">
+                <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                <input type="text" id="dob" class="mt-1 p-2 w-full border rounded-md" placeholder="Enter DOB (dd-mm-yyyy)">
+            </div>
+            <div class="mb-4">
+                <label id="captchaLabel" class="block text-sm font-medium text-gray-700">CAPTCHA: What is ?</label>
+                <input type="text" id="captcha" class="mt-1 p-2 w-full border rounded-md" placeholder="Enter answer">
+            </div>
+            <button onclick="verifyCredentials()" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Submit</button>
+        </div>
+        <div id="error" class="text-red-500 mt-4 hidden">Invalid details</div>
+        <div id="document" class="hidden">
+            <div class="absolute top-4 right-4">
+                <a href="ICFRE - INSTITUTE OF FOREST GENETICS & TREE BREEDING.pdf" download class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Download PDF</a>
+            </div>
+            <iframe src="ICFRE - INSTITUTE OF FOREST GENETICS & TREE BREEDING.pdf" class="full-page-iframe" title="ICFRE Document"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Generate random CAPTCHA on page load and form reset
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const captchaLabel = document.getElementById('captchaLabel');
+            captchaLabel.textContent = `CAPTCHA: What is ${num1} + ${num2}?`;
+            return num1 + num2;
+        }
+
+        // Store the correct CAPTCHA answer
+        let correctCaptcha = generateCaptcha();
+
+        function verifyCredentials() {
+            const rollNo = document.getElementById('rollNo').value.trim();
+            const dob = document.getElementById('dob').value.trim();
+            const captcha = document.getElementById('captcha').value.trim();
+            const error = document.getElementById('error');
+            const documentDiv = document.getElementById('document');
+            const formContainer = document.getElementById('formContainer');
+
+            const userCaptcha = parseInt(captcha) || 0;
+
+            if (rollNo === 'TE1172' && dob === '25-12-1997' && userCaptcha === correctCaptcha) {
+                error.classList.add('hidden');
+                documentDiv.classList.remove('hidden');
+                formContainer.classList.add('hidden');
+            } else {
+                error.classList.remove('hidden');
+                error.textContent = 'Invalid details';
+                documentDiv.classList.add('hidden');
+                formContainer.classList.remove('hidden');
+                // Regenerate CAPTCHA on failed attempt
+                correctCaptcha = generateCaptcha();
+                document.getElementById('captcha').value = '';
+            }
+        }
+
+        // Regenerate CAPTCHA if form is reset or page is reloaded
+        window.onload = function() {
+            generateCaptcha();
+        };
+    </script>
+</body>
+</html>
